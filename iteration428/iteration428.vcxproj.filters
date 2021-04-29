@@ -14,49 +14,64 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Shader">
-      <UniqueIdentifier>{a61e567c-7756-4bd0-9d69-1321b9e3c27f}</UniqueIdentifier>
+      <UniqueIdentifier>{73a42334-7574-47f6-8982-b51b9b340ee4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDevice.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CMesh.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CMaterial.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CModel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
+    <Text Include="DirectionalLightPS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="VSLightDirection.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="DirectionalLightVS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="PSLightDirection.txt">
+      <Filter>Shader</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CMesh.h">
+    <ClInclude Include="CDevice.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CMaterial.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CDevice.h">
+    <ClInclude Include="CMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CModel.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="CCamera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="VSLightDirection.fx">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="Text.fx">
-      <Filter>资源文件</Filter>
-    </Text>
+    <ClCompile Include="CDevice.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CMaterial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

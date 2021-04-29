@@ -1,0 +1,52 @@
+//use Struct to code DirectionalLight
+//DirectionalLightVS.txt
+
+DirectionalLight dirLight;  
+struct DirectionalLight
+{
+	float4 AmbientMat;
+	float4 DiffuseMat;
+	float4 Specular;
+	float3 LightDirection;
+}
+
+matrix ViewMatrix;  // 观察矩阵
+matrix ViewProjMatrix;//观察投影矩阵 //程序中得到GetConstantByName(0,"WVPMatrix")
+	 
+	float4 AmbientIntens= {0.0f,0.0f,0.2f,1.0f};
+	float4 DiffuseIntens= {0.0f,0.0f,1.0f,1.0f};
+	float4 SpecularIntens={0.0f,0.0f,1.0f,1.0f};
+
+struct VS_INPUT
+{
+    float3 position  : POSITION;
+	float3 normal : NORMAL ;
+};
+
+struct VS_OUTPUT
+{
+    float3 position : POSITION;
+	float3 diffuse :  COLOR;
+};
+
+
+VS_OUTPUT  Main(VS_INPUT input)
+{
+    VS_OUTPUT output = (VS_OUTPUT)0; 
+   
+    output.position = mul(input.position, ViewProjMatrix);   //对顶点位置 观察投影转换
+	
+	dirLight.LightDirection.w = 0.0f;
+	input.normal.w = 0.0f;
+	dirLight.LightDirection = mul(dirLight.LightDirection,ViewMatrix);  // 灯光方向 = 光的方向 X 观察矩阵
+	input.normal   = mul(input.normal,   ViewMatrix); // 输入法线的方向 = 源法线方向* 观察矩阵
+
+   float s= dot(dirLight.LightDirection,input.normal);    // s = 光向 *  法线向量 = |光向|*|法线|*cosSeta
+   
+   if( s< 0.0f)   
+    {
+		s= 0.0f;
+	}
+   output.diffuse = (dirLight.AmbientMat*AmbientIntens)  +  (s * (DiffuseIntens *  dirLight.DiffuseMat))+(dirLight.Specular * SpecularIntens);  //  漫反射光
+    return output;
+};

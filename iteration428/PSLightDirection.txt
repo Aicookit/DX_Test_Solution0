@@ -1,0 +1,56 @@
+
+	float4 AmbientMat;
+	float4 DiffuseMat;
+	float4 specular;
+	float4 LightDirection;
+	
+struct Material
+{
+	float4 AmbientMat;
+	float4 DiffuseMat;
+	float4 specular;
+	float power;
+};
+
+float3 eyePosW;
+
+Material mat;
+sampler2D tex;
+
+struct PS_INPUT
+{
+	float2 uv : TEXCOORD0;
+	float3 posW : TEXCOORD1; 
+	float3 normalW :TEXCOORD2;
+};
+
+struct PS_OUTPUT
+{
+	float4 color: COLOR;
+};
+
+
+PS_OUTPUT Main(PS_INPUT input)
+{
+	PS_OUTPUT output;
+	float4 baseColor = tex2D(tex, input.uv);
+
+	float3 dirLightDir = normalize(-LightDirection.xyz);
+
+    //AmbientMat
+	float4 dirAmbientMatColor = mat.AmbientMat * AmbientMat;
+
+	//DiffuseMat
+	float dirDiffuseMat = max(dot(dirLightDir, input.normalW), 0);
+	float4 dirDiffuseMatColor = mat.DiffuseMat * dirDiffuseMat * DiffuseMat;
+
+	//specular
+	float3 viewDir = normalize(eyePosW - input.posW.xyz);
+	float3 halfDir = normalize(viewDir + dirLightDir);
+	float dirSpecular = pow(max(dot(halfDir, input.normalW), 0), mat.power);
+	float4 dirSpecularColor = mat.specular * dirSpecular * specular;
+
+	output.color = baseColor * (dirAmbientMatColor + dirDiffuseMatColor + dirSpecularColor);
+	output.color.w = baseColor.w;
+	return output;
+}

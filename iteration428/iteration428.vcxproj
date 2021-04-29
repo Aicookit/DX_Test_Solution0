@@ -20,9 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{40383768-46A4-47C6-AFED-5B10CFA79E7A}</ProjectGuid>
-    <RootNamespace>Second2</RootNamespace>
+    <ProjectGuid>{0A0DF0D9-C5DC-4F09-8115-642DF9F0A9A2}</ProjectGuid>
+    <RootNamespace>iteration428</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>Iteration428</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -127,22 +128,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="DirectionalLightPS.txt" />
+    <Text Include="DirectionalLightVS.txt" />
+    <Text Include="PSLightDirection.txt" />
+    <Text Include="VSLightDirection.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CDevice.h" />
+    <ClInclude Include="CLight.h" />
+    <ClInclude Include="CMaterial.h" />
+    <ClInclude Include="CMesh.h" />
+    <ClInclude Include="CModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CDevice.cpp" />
+    <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CModel.cpp" />
     <ClCompile Include="Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CDevice.h" />
-    <ClInclude Include="CMaterial.h" />
-    <ClInclude Include="CMesh.h" />
-    <ClInclude Include="CModel.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Text.fx" />
-    <Text Include="VSLightDirection.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

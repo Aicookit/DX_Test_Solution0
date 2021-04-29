@@ -1,0 +1,78 @@
+//聚光
+
+matrix g_WorldMatrix;  //世界矩阵
+float4 g_ViewPos;      //观察点(相机)
+
+
+PointLight Light_Spot;
+ //定义聚光灯属性
+struct SpotLight
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+
+    float3 Position;
+    float Range;
+
+    float3 Direction;
+    float Spot;
+
+    float3 Att;
+    float pad;
+};
+
+struct Material  //定义材质属性
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+    float4 Reflect;
+};
+
+
+struct PS_INPUT		
+{
+	float4 vtpos : TEXCOORD0;  //顶点位置(接受顶点着色器的输出,要对应)
+	float3 normal : TEXCOORD1;
+};
+struct PS_OUTPUT	          //输出像素颜色
+{
+	float4 Color : COLOR0;	   //像素着色器最终输出计算好的颜色
+};
+
+PS_OUTPUT PS_Main(PS_INPUT input)
+{
+	PS_OUTPUT output = (PS_OUTPUT)0;
+
+	float4 worldpos = mul(input.vtpos, g_WorldMatrix);//顶点在世界空间中的坐标,即乘以世界矩阵
+
+     float4 baseColor = float4(0,0,1,1);      
+
+     float3 normal = normalize(input.Normal);
+
+     float3 lightDirection = normalize(input.LightDirection);   
+
+     float coneDot = dot(lightDirection, normalize(Direction));  //
+
+     float shading = 0;        
+
+     if (coneDot > Range)
+
+     {
+
+         float coneAttenuation = pow(coneDot, RangeAtt);  //衰减系数
+
+         shading = dot(normal, -lightDirection);
+
+         shading *= LightStrenght;
+
+         shading *= coneAttenuation;
+
+     }       
+
+     Output.Color = baseColor*(shading + Ambient);
+
+     return Output;
+
+}

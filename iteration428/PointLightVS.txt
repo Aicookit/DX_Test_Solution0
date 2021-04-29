@@ -1,0 +1,77 @@
+
+//PointVShader.txt
+
+Matrix WVPMatrix ;				//这个变量将会保存世界变换矩阵*相机变换矩阵*透视投影矩阵的积//用这个矩阵，将点转化到裁剪空间中去
+
+
+PointLight Light_Point;
+struct PointLight
+{ 
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+
+    float3 Position; //这个变量保存点光源的位置
+    float Range;
+
+    float3 Att;
+    float pad;
+};
+
+
+struct VS_INPUT   //定义顶点着色的输入结构体
+{
+    float4 position  : POSITION;
+	float4 normal : NORMAL ；
+};
+
+struct VS_OUTPUT
+{
+    float4 position : POSITION;
+};
+ 
+VS_OUTPUT Main(VS_INPUT input)
+{
+
+    VS_OUTPUT output = (VS_OUTPUT)0; 
+   
+    Ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    Diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+   
+   
+    float3 lightVec = L.Position - pos;   //光照方向：顶点到光源
+   
+    float d = length(lightVec);   //顶点到光源距离
+   
+    if (d > L.Range)  //超过范围不再计算
+        return;
+
+    lightVec /= d;  //归一化光照方向
+   
+    Ambient = mat.Ambient * L.Ambient; //计算环境光
+       
+    float diffuseFactor = dot(lightVec, normal);  //漫反射系数
+   
+    [flRangeAtten]
+    if (diffuseFactor > 0.0f)
+    {
+        float3 v = reflect(-lightVec, normal);
+        float specularFactor = pow(max(dot(v, toEye), 0.0f), mat.specularular.w);
+        //计算漫反射光
+        Diffuse = diffuseFactor * mat.Diffuse * L.Diffuse;
+        //计算高光
+        Specular = specularFactor * mat.Specular* L.Specular;
+    }
+   
+    // 计算衰减
+    float RangeAtt = 1.0f / dot(L.RangeAtt, float3(1.0f, d, d*d));
+   
+    Diffuse *= RangeAtt;
+    Specular *= RangeAtt;
+	
+	float4 litColor = Ambient + Diffuse + Specular;
+	output.litColor;
+
+	return output;
+}

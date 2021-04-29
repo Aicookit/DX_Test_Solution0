@@ -1,0 +1,73 @@
+//点光
+
+matrix g_WorldMatrix;  //世界矩阵
+float4 g_ViewPos;      //观察点(相机)
+
+
+PointLight Light_Point;
+struct PointLight //定义点光属性
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+
+    float3 Position;
+    float Range;
+
+    float3 RangeAtt;  //范围衰减
+    float LightStrenght; //光照强度系数 
+};
+
+
+struct Material  //定义材质属性
+{
+	float4 Ambient;
+	float4 Diffuse;
+	float4 Specular;
+	float4 Lightpower;
+};
+
+struct PS_INPUT
+{
+	float2 uv : TEXCOORD0;
+	float3 posW : TEXCOORD1;  /传入像素着色器用,TEXCOORD表示寄存器名字
+	float3 normalW :TEXCOORD2;
+};
+
+struct PS_OUTPUT
+{
+	float4 color: COLOR;
+};
+
+
+PS_OUTPUT Main(PS_INPUT input) : SV_Target
+{
+	float4 output = (PS_OUTPUT)0;
+
+	input.NormalW = normalize(input.NormalW);
+
+	// 像素指向眼睛的向量
+	float3 toEyeW = normalize(g_EyePosW - input.PosW);
+	// 像素到光源的向量
+	float3 toLight = g_PointLight.Position - input.PosW;
+	float d = length(toLight);
+	toLight /= d;
+
+	// 初始化为0
+	float4 Ambient, Diffuse, Specular;
+	Ambient = Diffuse = Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	Ambient = g_Material.Ambient * g_PointLight.Ambient;
+	if (d < g_PointLight.Range)
+	{
+		float att = 1 / dot(g_PointLight.RangeAtt, float3(1.0f, d, d * d));  //衰减因子
+		Diffuse = g_Material.Diffuse * g_PointLight.Diffuse * max(dot(toLight,input.NormalW),0.0f) * att;
+		Specular = g_Material.Specular * g_PointLight.Specular * max(pow(dot(reflect(-toLight, input.NormalW), toEyeW), g_Material.Specular.w), 0.0f) * att;
+	}
+
+	float4 output = input.Color * (Ambient + Diffuse + Specular);
+
+	output.a = g_Material.Diffuse.a * input.Color.a;
+
+	return output;
+}
