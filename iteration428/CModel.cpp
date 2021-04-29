@@ -54,7 +54,7 @@ void CModel::SetScale(float x, float y, float z)
 
 void CModel::Render(CDevice * pDevice, CLight * pLight, CCamera * pCamera)
 {
-	D3DXMATRIX translate, rotate, scale;      // 控制model的移动、旋转、缩放
+	D3DXMATRIX translate, rotate, scale;      // 对local coord移动、旋转、缩放 从而利用矩阵的移动旋转缩放方法控制model在World coordinate中的移动。。。
 	D3DXMatrixTranslation(&translate, m_vPos.x, m_vPos.y, m_vPos.z);
 	D3DXMatrixRotationYawPitchRoll(&rotate, m_vRotate.x, m_vRotate.y, m_vRotate.z);
 	D3DXMatrixScaling(&scale, m_vScale.x, m_vScale.y, m_vScale.z);
