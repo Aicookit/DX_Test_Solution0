@@ -65,9 +65,7 @@ void CModel::Render(CDevice * pDevice)
 
 	m_pMesh->GetMesh(pDevice);
 
-	m_pMaterial->Apply(pDevice);
+	m_pMaterial->Apply(pDevice,&m_mWorld);
 
 	//m_pMaterial->Apply(pDevice, &m_mWorld, pLight);
-
-
 }

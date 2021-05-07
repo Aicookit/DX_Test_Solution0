@@ -1,15 +1,17 @@
+// DirectionalLightPS.txt
 
 
-float4 ambientLight;
-float4 diffuseLight;
-float4 specularLight;
-float4 directionLight;
+
+	float4 ambientLight;
+	float4 diffuseLight;
+	float4 specularLight;
+	float4 directionLight;
 
 
-float4 ambientMat;
-float4 diffuseMat;
-float4 specularMat;
-float powerMat;
+	float4 ambientMat;
+	float4 diffuseMat;
+	float4 specularMat;
+	float powerMat;
 
 float3 eyePosW;
 

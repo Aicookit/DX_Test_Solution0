@@ -20,9 +20,9 @@ protected:
 	float m_fNearClip;    //除加中 1~
 	float m_fFarClip;      //垓加中 1000~
 
-	D3DXMATRIX m_matView;
-	D3DXMATRIX m_matproj;
-	D3DXMATRIX m_matVP;
+	D3DXMATRIX m_matView = D3DXMATRIX{};
+	D3DXMATRIX m_matproj = D3DXMATRIX{};
+	D3DXMATRIX m_matVP = D3DXMATRIX{};
 
 public:
 	LPD3DXVECTOR3 GetPosition();

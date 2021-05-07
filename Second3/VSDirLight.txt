@@ -1,0 +1,6 @@
+//方向光
+
+matrix MatWVP; // 世界、观察、投影变换矩阵的乘积
+float4 ViewPos; //视点位置
+float3 LightDir = {-3.0f, 3.0f, -1.0f};   //方向光源方向
+

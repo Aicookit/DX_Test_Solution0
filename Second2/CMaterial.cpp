@@ -27,8 +27,9 @@ HRESULT CMaterial::LoadTexture(CDevice * pDevice, const char *pTextureName)
 
 }
 //Mat set texture, shader and bind to Device
-HRESULT CMaterial::Apply(CDevice * pDevice)
+HRESULT CMaterial::Apply(CDevice * pDevice, LPD3DXMATRIX lpWorldMatrix)
 {
-	pDevice->GetD3DDevice()->SetTexture(0, m_pTexture);
+	pDevice->GetD3DDevice()->SetTexture(0, m_pTexture);  // 4 使用数据  ，中间加载数据不使用设置到4折就会成空指针
+
 	return S_OK;
 }

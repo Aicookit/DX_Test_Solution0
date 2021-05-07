@@ -21,13 +21,19 @@
     <Text Include="DirectionalLightPS.txt">
       <Filter>Shader</Filter>
     </Text>
-    <Text Include="VSLightDirection.txt">
-      <Filter>Shader</Filter>
-    </Text>
     <Text Include="DirectionalLightVS.txt">
       <Filter>Shader</Filter>
     </Text>
     <Text Include="PSLightDirection.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="Text1.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="VSPointLight.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="PSPointLight.txt">
       <Filter>Shader</Filter>
     </Text>
   </ItemGroup>

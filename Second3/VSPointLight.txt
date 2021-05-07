@@ -1,0 +1,60 @@
+/////
+//点光源案例VS
+
+matrix MatWVP; // 世界、观察、投影变换矩阵的乘积
+
+float3 LightPos;   //点光源位置
+float4 ViewPos; //视点位置
+float4 AmbientLight; //环境光
+float4 DiffuseLight ;   //漫反射光
+float4 SpecularLight;   //镜面光
+float4 Attenuation ; //点光源的衰减系数，分别存储在x,y,z分量里
+
+struct VS_INPUT
+{	
+	float4 Pos : POSITION0;
+	float3 normal : NORMAL;
+};
+
+struct VS_OUTPUT
+{
+	float4 Position : POSITION0;
+	float4 Color : COLOR0;
+
+};
+
+//计算某个顶点的颜色
+float4 CalculateLightColor(float4 Pos, float3 normal)
+{
+	
+	float3 LightDir = LightPos - Pos;  //从顶点到光源的向量
+	float Dist = length(LightDir);  //顶点与光源之间的距离
+	LightDir = LightDir / Dist;  //将LightDir向量化成单位向量
+
+	
+	float DistAtten = 1.0f / (Attenuation.x + Attenuation.y * Dist  //计算点光源的衰减系数，距离越大，光就越弱
+		+ Attenuation.z * Dist * Dist);
+	
+	
+	float AngleAtten = saturate(dot(LightDir, normal));  //计算漫反射光的衰减系数
+
+
+	float3 EyeDir = normalize(ViewPos.xyz - Pos.xyz);  	//顶点到视点的向量
+	
+	float3 HalfVect = normalize(LightDir + EyeDir);  //上图中的角平分线，即向量AB
+	
+	
+	float SpecAtten = saturate(dot(normal, HalfVect));  //计算镜面光的衰减系数
+
+
+	return DistAtten * (AmbientLight+DiffuseLight * AngleAtten + SpecularLight * pow(SpecAtten, 32));  	//最终顶点处的颜色，这里指定Sharpness的值是32
+}
+
+VS_OUTPUT vs_main(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	output.Position = mul(input.Pos, MatWVP);
+	output.Color = CalculateLightColor(input.Pos, input.normal);
+
+	return output;
+}

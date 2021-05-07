@@ -57,6 +57,44 @@ LPDIRECT3DINDEXBUFFER9 CMesh::GetIB()
 {
 	return m_pIB;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//创建几何模型方法1 绘制三角形
+HRESULT CMesh::CreateTriangle(CDevice * pDevice, float x, float y, float)
+{
+	m_iVertexCount = 3;
+	m_iFaceCount = 1;
+
+	//创建设备
+	LPDIRECT3DDEVICE9 pDevice2 = pDevice->GetD3DDevice();
+
+	//声明顶点缓存 和 2定义顶点结构
+	pDevice2->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &m_pVB, 0);
+	pDevice2->CreateIndexBuffer(3 * sizeof(WORD), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_pIB, 0);
+	CUSTOMVERTEX sourceTriangle_vertices[] =
+	{
+		//顶点:位置/颜色/贴图
+		/*{-1.0f,-1.0f,0.0f,D3DCOLOR_XRGB(255,255,255),0.0f,0.0f},
+		{0.0f,1.0f,0.0f,D3DCOLOR_XRGB  (255,0,0),1.0f,0.0f},
+		{1.0f,-1.0f,0.0f,D3DCOLOR_XRGB(0,0,255),1.0f,1.0f},*/
+		//顶点：位置/光照法线/贴图
+		{-1.0f,-1.0f,0.0f,  -1.0f,-1.0f,1.0f,   0.0f,0.0f},
+		{0.0f,1.0f,0.0f,    0.0f,1.0f,1.0f,     1.0f,0.0f},
+		{1.0f,-1.0f,0.0f,   1.0f,-1.0f,1.0f,    1.0f,1.0f},
+	};
+	CUSTOMVERTEX * pVertices = NULL;
+	if (FAILED(m_pVB->Lock(0, 3 * sizeof(CUSTOMVERTEX), (void**)&pVertices, 0)))
+		return E_FAIL;
+	memcpy(pVertices, sourceTriangle_vertices, sizeof(CUSTOMVERTEX) * 3);
+	m_pVB->Unlock();
+
+	WORD *Indices = NULL;
+	if (FAILED(m_pIB->Lock(0, 3 * sizeof(WORD), (void**)&Indices, 0)))
+		return E_FAIL;
+	Indices[0] = 0; Indices[1] = 1; Indices[2] = 2;
+	m_pIB->Unlock();
+
+	return S_OK;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //创建几何模型方法2 绘制四个顶点的平面
 HRESULT CMesh::CreatePlane(CDevice * pDevice, float x, float y, float z)

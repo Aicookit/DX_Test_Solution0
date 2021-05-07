@@ -20,10 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{0A0DF0D9-C5DC-4F09-8115-642DF9F0A9A2}</ProjectGuid>
-    <RootNamespace>iteration428</RootNamespace>
+    <ProjectGuid>{FE4FA9A0-E208-46D2-AB7C-BDD39EE963DD}</ProjectGuid>
+    <RootNamespace>Second3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>Iteration428</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -74,9 +73,7 @@
     <Import Project="..\..\..\A2Solution1\PropertySheet.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -130,29 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="DirectionalLightPS.txt" />
-    <Text Include="DirectionalLightVS.txt" />
-    <Text Include="PSPointLight.txt" />
+    <ClCompile Include="DemoMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PSDirLight.txt" />
+    <Text Include="VSDirLight.txt" />
     <Text Include="VSPointLight.txt" />
-    <Text Include="PSLightDirection.txt" />
-    <Text Include="Text1.txt" />
+    <Text Include="PSPointlightPhongs.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCamera.h" />
-    <ClInclude Include="CDevice.h" />
-    <ClInclude Include="CLight.h" />
-    <ClInclude Include="CMaterial.h" />
-    <ClInclude Include="CMesh.h" />
-    <ClInclude Include="CModel.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CCamera.cpp" />
-    <ClCompile Include="CDevice.cpp" />
-    <ClCompile Include="CLight.cpp" />
-    <ClCompile Include="CMaterial.cpp" />
-    <ClCompile Include="CMesh.cpp" />
-    <ClCompile Include="CModel.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <None Include="VSPointlightPhongs.txt" />
+    <None Include="PSPointLight.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

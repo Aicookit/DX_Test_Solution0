@@ -131,6 +131,7 @@
     <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CModel.cpp" />
+    <ClCompile Include="CShader.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,10 +139,11 @@
     <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CModel.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="CShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Text.fx" />
+    <Text Include="Text.txt" />
+    <Text Include="Text1Color.txt" />
     <Text Include="VSLightDirection.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

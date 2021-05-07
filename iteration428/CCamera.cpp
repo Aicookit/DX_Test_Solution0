@@ -70,16 +70,5 @@ LPD3DXMATRIX CCamera::GetProjMatrix()    //2 get数据并返回
 
 void CCamera::Update()  //3更新数据
 {
-	//CMaterial * pMat = NULL;
-    //pMat = new CMaterial();
 	m_matVP = m_matView * m_matproj;
-	//pMat->SetMatrix(pDevice, "ViewProjMatrix", &vp);
 }
-
-//void CCamera::SetVPMatrix(CDevice * pDevice, D3DXMATRIX m_matView, D3DXMATRIX m_matproj)
-//{
-//	CMaterial * pMat = NULL;
-//	pMat = new CMaterial();
-//	D3DXMATRIX vp = m_matView * m_matproj;
-//	pMat->SetMatrix(pDevice, "ViewProjMatrix", &vp);
-//}

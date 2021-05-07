@@ -28,7 +28,7 @@ public:
 	HRESULT LoadVS(CDevice * pDevice, const char * pShaderName);
 	HRESULT SetVSHandle(CDevice*pDevice, const char*pHandle, D3DXMATRIX * mMatrix, D3DXVECTOR4 * fVector);
 
-	HRESULT Apply(CDevice * pDevice);//应用包括 贴图、光照shader。。
+	HRESULT Apply(CDevice * pDevice, LPD3DXMATRIX lpWorldMatrix);//应用包括 贴图、光照shader。。
 
 };
 

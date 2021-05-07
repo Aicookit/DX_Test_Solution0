@@ -25,7 +25,7 @@ public:
 	LPDIRECT3DINDEXBUFFER9 GetIB();
 	                                                                //HRESULT LoadFile(CDevice * pDevice, const char * szpFileName);
 	HRESULT CreatePlane(CDevice * pDevice,float x , float y , float z );    // 创建几何模型平面
-	HRESULT CreateTriangle(CDevice * pDevice);  // 创建几何模型三角
+	HRESULT CreateTriangle(CDevice * pDevice, float x, float y, float);  // 创建几何模型三角
 	HRESULT CreateSphere(CDevice * pDevice,int longitudeCount,int latitudeCount);   //// 创建几何模型球体
 	HRESULT CreateSphere2(CDevice * pDevice, int iLonggitudeCout, int iLatitudeCout);//球体模型二
 	void GetMesh(CDevice * pDevice);              //调用设备渲染模型

@@ -1,0 +1,33 @@
+// File: sampleVS.txt
+// 
+
+
+
+	matrix ViewProjMatrix;
+    float4 materialAmbient;
+
+
+struct VS_INPUT               // 输入输出结构时shader与编译器 、 GPU之间的通信，与应用程序无关
+{
+    float4 position  : POSITION;  
+};
+															
+struct VS_OUTPUT
+{
+    float4 position : POSITION;
+    float4 color  : COLOR;
+};
+ 																																												
+VS_OUTPUT Main(VS_INPUT input)
+{
+															
+    VS_OUTPUT output = (VS_OUTPUT)0;
+ 
+    output.position  = mul(input.position, ViewProjMatrix);
+	float4 AmbientColor = {0.0f,0.0f,0.7f,0.7f};
+	float AmbientIntensity = 0.55f;
+ 
+	output.color = AmbientIntensity*AmbientColor*materialAmbient;
+ 
+    return output;
+}

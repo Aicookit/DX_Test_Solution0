@@ -22,6 +22,7 @@ struct  CUSTOMVERTEX
 	FLOAT u, v;
 };
 
+
 //顶点声明封装： 
 HRESULT CMesh::VertexDeclaration(CDevice * pDevice)
 {
@@ -32,12 +33,12 @@ HRESULT CMesh::VertexDeclaration(CDevice * pDevice)
 	//2定义描述可编程顶点分量
 	D3DVERTEXELEMENT9 VertexDecl[] =
 	{
-		{0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0}, //pos  坐标
+		{0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0}, //pos  坐标  D3DDECLUSAGE_POSITION表示顶点位置已经被变换 它通知图形卡不要把这个顶点送到顶点处理阶段（变换和光照）。
 		{0,12,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0}, //nornal1  法线
 		//{0,24,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,1},//nornal 2
 		//{0,36,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,2},//nornal3
-		{0,24,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},//贴图//纹理
-		{0,28,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,1},//nornal		
+		//{0,24,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},//贴图//纹理
+		//{0,28,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,1},//nornal		
 		D3DDECL_END()  // 结束声明
 	};
 
@@ -76,10 +77,10 @@ HRESULT CMesh::CreateTriangle(CDevice * pDevice,float x, float y ,float)
 	pDevice2->CreateIndexBuffer(3 * sizeof(WORD), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_pIB, 0);
 	CUSTOMVERTEX sourceTriangle_vertices[] =
 	{
-		//顶点:位置/颜色/贴图
-		/*{-1.0f,-1.0f,0.0f,D3DCOLOR_XRGB(255,255,255),0.0f,0.0f},
-		{0.0f,1.0f,0.0f,D3DCOLOR_XRGB  (255,0,0),1.0f,0.0f},
-		{1.0f,-1.0f,0.0f,D3DCOLOR_XRGB(0,0,255),1.0f,1.0f},*/
+		////顶点:位置/法线
+		//{-1.0f,-1.0f,0.0f,   0.0f,0.0f},
+		//{0.0f,1.0f,0.0f,    1.0f,0.0f},
+		//{1.0f,-1.0f,0.0f,    1.0f,1.0f},
 		//顶点：位置/光照法线/贴图
 		{-1.0f,-1.0f,0.0f,  -1.0f,-1.0f,1.0f,   0.0f,0.0f},
 		{0.0f,1.0f,0.0f,    0.0f,1.0f,1.0f,     1.0f,0.0f},
@@ -125,10 +126,14 @@ HRESULT CMesh::CreatePlane(CDevice * pDevice, float x, float y, float z)
 
 	//2.4 平面的模型
 	CUSTOMVERTEX sourcePlane_vertices[] = {
-										{ -1.0f, -1.0f, 0.0f,  -1.0f, -1.0f, -1.0f,   0.0f,1.0f},  //A1 三象限  // 纹理 UV 怎么对应 到相对的 顶点图元上
+	/*	{ -1.0f, -1.0f, 0.0f,  0.0f,1.0f},
+		{ -1.0f, 1.0f, 0.0f,   0.0f,0.0f},
+		{  1.0f, 1.0f, 0.0f,   1.0f,0.0f},
+		{  1.0f, -1.0f, 0.0f,  1.0f,1.0f},*/
+										{ -1.0f, -1.0f, 0.0f,  -1.0f, -1.0f, -1.0f,    0.0f,1.0f},  //A1 三象限  // 纹理 UV 怎么对应 到相对的 顶点图元上
 										{ -1.0f, 1.0f, 0.0f,   -1.0f, 1.0f,-1.0f,      0.0f,0.0f},   //A2  四象限
-										{  1.0f, 1.0f, 0.0f,   1.0f, 1.0f, -1.0f,     1.0f,0.0f},     //A3 一象限
-										{  1.0f, -1.0f, 0.0f,  1.0f, -1.0f, -1.0f,      1.0f,1.0f},     //A4 二象限
+										{  1.0f, 1.0f, 0.0f,   1.0f, 1.0f, -1.0f,      1.0f,0.0f},     //A3 一象限
+										{  1.0f, -1.0f, 0.0f,  1.0f, -1.0f, -1.0f,     1.0f,1.0f},     //A4 二象限
 	};
 
 	CUSTOMVERTEX * pVertices = NULL;

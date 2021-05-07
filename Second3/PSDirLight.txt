@@ -1,0 +1,6 @@
+//方向光 PS
+
+float4 AmbientLight = {0.0f, 0.0f, 0.1f, 1.0f}; //环境光
+float4 DiffuseLight = {0.0f, 0.0f, 1.0f, 1.0f};   //漫反射光
+float4 SpecularLight = {1.0f, 1.0f, 1.0f, 1.0f};   //镜面光
+

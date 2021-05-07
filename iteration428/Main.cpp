@@ -20,17 +20,27 @@ std::vector<CModel *> g_vecModels;
 
 HRESULT InitRes()
 {
-	CLightDirectional *pLightDir = new CLightDirectional();  // 1 建立数据
-	pLightDir->SetAmbientMat(0.0f, 0.0f, 1.0f, 1.0f);       // 2 设置数据
-	pLightDir->SetDiffuseMat(0.0f, 0.0f, 1.0f, 1.0f);
-	//pLightDire->SetSpecularMat(0.0f, 0.0f, 1.0f, 1.0f);
-	pLightDir->SetDirection(-0.57f, 0.57f, -0.57f);
-	g_pLight = pLightDir;
 
 	g_pCamera = new CCamera();
-	g_pCamera->SetPositon(0.0f, 0.0f, -5.0f);  // set View
-	g_pCamera->SetTarget(0.0f, 0.0f, 0.0f);
+	g_pCamera->SetPositon(0.0f, 0.0f, -5.0f);  // set V
+	g_pCamera->SetTarget(1.0f, 0.0f, 0.0f);
 	g_pCamera->SetUp(0.0f, 1.0f, 0.0f);
+	g_pCamera->SetProjMatrix(4.0f, 1.0f, 1000.0f); // Set P   will get VP in Update()
+	//方向光
+	//CLightDirectional *pLightDir = new CLightDirectional();  
+	//pLightDir->SetAmbientMat(0.0f, 0.0f, 1.0f, 1.0f);      // set AmbientMat 
+	//pLightDir->SetDiffuseMat(0.0f, 0.0f, 1.0f, 1.0f);     // set DiffuseMat 
+	////pLightDire->SetSpecularMat(0.0f, 0.0f, 1.0f, 1.0f);
+	//pLightDir->SetDirection(0.0f, 0.0f, -8.0f);       // set Direction 
+	//g_pLight = pLightDir;
+	//点光
+	CLightPoint * pLightPoint = new CLightPoint();
+	pLightPoint->SetAmbientMat(0.0f, 0.0f, 0.1f, 1.0f);
+	pLightPoint->SetDiffuseMat(0.0f, 0.0f, 1.0f, 1.0f);
+	pLightPoint->SetSpecularMat(1.0f, 1.0f, 1.0f, 1.0f);
+	pLightPoint->SetPosition(0.0f, 3.0f, -3.0f); //点光位置
+	pLightPoint->SetAtt(0.5f, 0.1f, 0.0f);  // 点光衰减
+	g_pLight = pLightPoint;
 
 	CModel * pModel;
 	CMesh * pMesh;
@@ -43,16 +53,22 @@ HRESULT InitRes()
 	pMesh->VertexDeclaration(g_pDevice);
 
 	pMat->LoadTexture(g_pDevice, "Cat.jpg");  // mat load texture
-	pMat->LoadVShader(g_pDevice, "VSLightDirection.txt"); // mat load shader
-	pMat->LoadPShader(g_pDevice, "PSLightDirection.txt"); // mat load shader
+	pMat->LoadVShader(g_pDevice, "VSPointLight.txt"); // mat load shader
+	pMat->LoadPShader(g_pDevice, "PSPointLight.txt"); // mat load shader
 
-	pMesh->CreateSphere2(g_pDevice, 20, 20); //Sphere-Mesh
-	//pMesh->CreateTriangle(g_pDevice);   //Triangle-Mesh
+	//pMesh->CreateSphere2(g_pDevice, 20, 20); //Sphere-Mesh
+	pMesh->CreateTriangle(g_pDevice,3,3,3);   //Triangle-Mesh
 	//pMesh->CreatePlane(g_pDevice, 4, 4, 4); // Plane-Mesh
 
 	pModel->SetMaterial(pMat);
 	pModel->SetMesh(pMesh);
-	//pModel->SetPos(5.0f, 0.0f, 0.0f);
+	//Model pos rotate scale ,will get W in Render()
+	pModel->SetPos(2.0f, 0.0f, 0.0f);
+	pModel->SetRotate(0.0f, 1.0f, 0.0f);
+	pModel->SetScale(0.0f, 0.0f, 1.0f);
+
+	pMat->SetVector(g_pDevice, "ViewPos", &D3DXVECTOR4(0.0f, 0.0f, -5.0f, 1.0f));  // 点光视点位置
+
 	g_vecModels.push_back(pModel);
 
 	return S_OK;
@@ -82,35 +98,15 @@ void CleanUp()
 		g_pDevice->GetD3DDevice()->Release();
 	}
 }
-/*
-void SetValue()
-{
-	CLightDirectional *pLightDir = new CLightDirectional();
-	pLightDir->SetAmbientMat(0.0f, 0.0f, 1.0f, 1.0f);
-	pLightDir->SetDiffuseMat(0.0f, 0.0f, 1.0f, 1.0f);
-	//pLightDire->SetSpecularMat(0.0f, 0.0f, 1.0f, 1.0f);
-	pLightDir->SetDirection(-0.57f, 0.57f, -0.57f);
-	//g_pLight = pLightDir;                //  assign to global
-	g_pCamera = new CCamera();
-	g_pCamera->SetPositon(0.0f, 0.0f, -5.0f);  // set View
-	g_pCamera->SetTarget(0.0f, 0.0f, 0.0f);
-	g_pCamera->SetUp(0.0f, 1.0f, 0.0f);
-	
-	g_pCamera->SetProjMatrix(4.0f, 1.0f, 1000.0f);  //set Proj
-	
-	//对ViewProj矩阵的设置用 Mat->SetMatrix()调？
-	g_pCamera->SetVPMatrix(g_pDevice, *g_pCamera->GetViewMatrix(), *g_pCamera->GetProjMatrix());  // set VP
-}*/
 
 void Render()
 {
 	// assign constant value to variable in shader for update in WND
 
-	//SetValue();
 
-	g_pCamera->Update();  //4 使用3更新数据
+	g_pCamera->Update();       
 
-	g_pDevice->GetD3DDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 1);  // 调用CDevice 类来做
+	g_pDevice->GetD3DDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(50, 0, 0), 1.0f, 1);  // 调用CDevice 类来做
 
 	if (SUCCEEDED(g_pDevice->GetD3DDevice()->BeginScene()))
 	{
@@ -120,7 +116,7 @@ void Render()
 		//SetRenderState为固定？
 		//g_pDevice->GetD3DDevice()->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE); // 启动Z 缓存，允许消隐处理
 		//g_pDevice->GetD3DDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);  //关闭3剔除背面
-		//g_pDevice->GetD3DDevice()->SetRenderState(D3DRS_LIGHTING, false); //用材质灯光渲染就打开灯光||用顶点颜色渲染就关闭灯光
+		g_pDevice->GetD3DDevice()->SetRenderState(D3DRS_LIGHTING, false); //用材质灯光渲染就打开灯光||用顶点颜色渲染就关闭灯光
 
 		g_pDevice->GetD3DDevice()->EndScene();
 	}

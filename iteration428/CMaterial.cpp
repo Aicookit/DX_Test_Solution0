@@ -52,7 +52,7 @@ HRESULT CMaterial::LoadVShader(CDevice*pDevice, const char*pVShaderName) //加载V
 	LPD3DXBUFFER errorBuffer = NULL;
 
 	//---4-1 编译VSshader
-	if (FAILED(D3DXCompileShaderFromFile(pVShaderName, 0, 0, "Main", "vs_2_0", D3DXSHADER_ENABLE_BACKWARDS_COMPATIBILITY, &shader, &errorBuffer, &m_pVSConstTable)))
+	if (FAILED(D3DXCompileShaderFromFile(pVShaderName, 0, 0, "vs_main", "vs_2_0", D3DXSHADER_ENABLE_BACKWARDS_COMPATIBILITY, &shader, &errorBuffer, &m_pVSConstTable)))
 	{
 		if (errorBuffer)
 		{
@@ -88,27 +88,28 @@ HRESULT CMaterial::LoadVShader(CDevice*pDevice, const char*pVShaderName) //加载V
 //   PS
 HRESULT CMaterial::LoadPShader(CDevice*pDevice, const char*pPSshaderName) // 加载PS
 {
-	HRESULT hr;
 	LPD3DXBUFFER shader = NULL;
 	LPD3DXBUFFER errorBuffer = NULL;
 
 	//编译PS
-	hr = D3DXCompileShaderFromFile(pPSshaderName, 0, 0, "Main", "ps_2_0", D3DXSHADER_DEBUG, &shader, &errorBuffer, &m_pPSconstTable);
-	if (hr != S_OK)
+	if (FAILED(D3DXCompileShaderFromFile(pPSshaderName, 0, 0, "ps_main", "ps_2_0", D3DXSHADER_ENABLE_BACKWARDS_COMPATIBILITY, &shader, &errorBuffer, &m_pPSconstTable)))
 	{
-		if (errorBuffer)
-		{
-			const char * szp = (const char *)errorBuffer->GetBufferPointer();   // 报告错误顶点信息
-			MessageBox(NULL, szp, "编译PSshader失败", MB_OK);
-		}
-		else
-			MessageBox(NULL, "可能无法找到PShader文件", "编译PSshader失败", MB_OK);
-		return E_FAIL;
+			if (errorBuffer)
+			{
+				const char * szp = (const char *)errorBuffer->GetBufferPointer();   // 报告错误顶点信息
+				MessageBox(NULL, szp, "编译PSshader失败", MB_OK);
+			}
+			else
+				MessageBox(NULL, "可能无法找到PShader文件", "编译PSshader失败", MB_OK);
+			return E_FAIL;
 	}
+	
 	//创建PS
-	hr = pDevice->GetD3DDevice()->CreatePixelShader((DWORD*)shader->GetBufferPointer(), &m_pPShader);
-	if (FAILED(hr))
-		return false;
+	if (FAILED(pDevice->GetD3DDevice()->CreatePixelShader((DWORD*)shader->GetBufferPointer(), &m_pPShader)))
+	{
+		MessageBox(NULL, "创建PS失败", "创建Pixel Shader", MB_OK);
+		return E_FAIL;
+	} ;
 
 	//+4  对PShader中变量赋值前设为默认
 	m_pPSconstTable->SetDefaults(pDevice->GetD3DDevice());
@@ -132,7 +133,7 @@ HRESULT CMaterial::SetMatrix(CDevice*pDevice, const char*pMatrixName, D3DXMATRIX
 	D3DXHANDLE PSHandle = m_pPSconstTable->GetConstantByName(0, pMatrixName);
 	if (VSHandle == NULL && PSHandle == NULL)
 	{
-		MessageBox(NULL, "shderHandle is Empty", "获取shade变量", MB_OK);
+		MessageBox(NULL, "VshderHandle is Empty", "获取shade变量", MB_OK);
 		return E_FAIL;
 	}
 	m_pVSConstTable->SetMatrix(pDevice->GetD3DDevice(), VSHandle, mMatrixValue); // (设备，获取shader变量的句柄，要设置的值）
@@ -146,7 +147,7 @@ HRESULT CMaterial::SetVector(CDevice*pDevice, const char*pHandle, D3DXVECTOR4 * 
 	//D3DXHANDLE PSHandle = m_pPSconstTable->GetConstantByName(0, pHandle);
 	if (VSHandle == NULL)
 	{
-		MessageBox(NULL, "shderHandle is Empty", "获取shader变量", MB_OK);
+		MessageBox(NULL, "PshderHandle is Empty", "获取shader变量", MB_OK);
 		return E_FAIL;
 	}
 	m_pVSConstTable->SetVector(pDevice->GetD3DDevice(), VSHandle, fVector);
@@ -210,7 +211,7 @@ HRESULT CMaterial::Apply(CDevice * pDevice, LPD3DXMATRIX lpWorld, CLight*pLight,
 	//SetFloatArray(pDevice, "Specular", *pLight->GetSpecular(), 3);
 
 	D3DXMATRIX wvp = *lpWorld * *pCamera->GetVP();   // Get WVP by compute then update the result of WVP under Render()
-	SetMatrix(pDevice, "WorldViewMatrix", &wvp);  // assign WVP value to the variable of "WorldViewMatrix" in VS
+	SetMatrix(pDevice, "MatWVP", &wvp);              // assign WVP value to the variable of "MatWVP" in VS
 
 	//方向光
 	if (pLight->GetType() == LT_DIR)
@@ -226,7 +227,8 @@ HRESULT CMaterial::Apply(CDevice * pDevice, LPD3DXMATRIX lpWorld, CLight*pLight,
 	{
 		CLightPoint * pPoint = (CLightPoint *)pLight;
 
-		SetFloat(pDevice, "Range", *pPoint->GetRange());
+		SetFloatArray(pDevice, "LightPos", *pPoint->GetPosition(), 3);  //设置Pointlight 位置
+		SetFloatArray(pDevice, "Attenuation", *pPoint->GetAtt(), 3); //设置点光源衰减
 
 	}
 	else if (pLight->GetType() == LT_SPOT)

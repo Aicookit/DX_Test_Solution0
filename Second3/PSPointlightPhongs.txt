@@ -1,0 +1,33 @@
+//PS Phong
+
+float4 AmbientLight = {0.0f, 0.0f, 0.1f, 1.0f}; //环境光
+float4 DiffuseLight = {0.0f, 0.0f, 1.0f, 1.0f};   //漫反射光
+float4 SpecularLight = {1.0f, 1.0f, 1.0f, 1.0f};   //镜面光
+
+struct PS_INPUT
+{
+	float4 LightDir : TEXCOORD0;
+	float3 Normal : TEXCOORD1;
+	float3 HalfVect : TEXCOORD2;
+};
+
+struct PS_OUTPUT
+{
+	float4 color : COLOR0;
+};
+
+PS_OUTPUT ps_main(PS_INPUT input) 
+{
+    PS_OUTPUT output = (PS_OUTPUT)0;
+	float3 Normal = normalize(input.Normal);              // 法线归一化
+	float3 LightDir = normalize(input.LightDir.xyz);      // 光照方向归一化
+	float3 HalfVect = normalize(input.HalfVect);         //  夹角归一化
+	float DistAtten = input.LightDir.w;
+ 
+	float AngleAtten = saturate(dot(LightDir, Normal));  //计算漫反射光的衰减系数
+	
+	float SpecAtten = saturate(dot(Normal, HalfVect));  //计算镜面光的衰减系数
+ 
+	output.color = DistAtten * (DiffuseLight * AngleAtten + SpecularLight * pow(SpecAtten, 16))+ AmbientLight;  //最终顶点处的颜色，这里指定Sharpness的值是32
+	return output;
+}

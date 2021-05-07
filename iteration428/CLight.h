@@ -4,8 +4,8 @@
 enum LIGHT_TYPE
 {
 	LT_DIR = 0,
-	LT_POINT = 0,
-	LT_SPOT = 0,
+	LT_POINT = 1,
+	LT_SPOT = 2,
 };
 
 class CLight                  
@@ -32,7 +32,7 @@ public:
 };
 
 
-class CLightDirectional :public CLight   //-平行光
+class CLightDirectional :public CLight   //DirectionLight-平行光
 {
 	D3DXVECTOR3 m_vDirection;
 
@@ -45,27 +45,24 @@ public:
 };
 
 
-class CLightPoint : public CLight     //-点光
+class CLightPoint : public CLight     //PointLight-点光
 {
-	D3DXVECTOR3 m_vPosition;         //位置
-	D3DXFLOAT16 m_vRange;            // 照射范围
-	D3DXVECTOR3 m_vAtt;              //衰减
+	D3DXVECTOR3 m_vPosition;         
+	D3DXVECTOR3 m_vAtt;              
 public:
 	CLightPoint();
 	~CLightPoint();
 
 	LPD3DXVECTOR3 GetPosition();
-	LPD3DXFLOAT16 GetRange();
 	LPD3DXVECTOR3 GetAtt();
 
-	void SetPosition(float x, float y, float z); 
-	void SetRange(float fRange);                 
+	void SetPosition(float x, float y, float z);               
 	void SetAtt(float x, float y, float z);      
 };
 
 
 
-class CLightSpot :public CLight          //-聚光灯
+class CLightSpot :public CLight          //SPotLight-聚光灯
 {
 	D3DXVECTOR3 m_vDirection;
 

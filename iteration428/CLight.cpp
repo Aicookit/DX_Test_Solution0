@@ -79,8 +79,7 @@ void CLightDirectional::SetDirection(float x, float y, float z)
 CLightPoint::CLightPoint()
 {
 	m_vPosition = { 0.0f,1.0f,0.0f };
-	m_vRange = 1000.0f;
-	m_vAtt = { 500.0f, 500.0f, 500.0f };
+	m_vAtt = { 0.5f, 0.1f, 0.0f };
 
 	m_eType = LT_POINT;
 }
@@ -92,10 +91,7 @@ LPD3DXVECTOR3 CLightPoint::GetPosition()
 {
 	return &m_vPosition;  // &取址后 占4字节
 }
-LPD3DXFLOAT16 CLightPoint::GetRange()
-{
-	return &m_vRange;
-}
+
 LPD3DXVECTOR3 CLightPoint::GetAtt()
 {
 	return &m_vAtt;
@@ -109,10 +105,7 @@ void CLightPoint::SetPosition(float x, float y, float z)
 	D3DXVec3Normalize(&m_vPosition, &m_vPosition);   // 归一化处理参数
 
 }
-void CLightPoint::SetRange(float fRange)   //点光照射范围
-{
-	m_vRange = fRange;
-}
+
 void CLightPoint::SetAtt(float x, float y, float z)
 {
 	m_vAtt.x = x;

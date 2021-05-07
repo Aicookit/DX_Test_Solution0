@@ -1,0 +1,44 @@
+/////
+//点光源Phong案例VS
+
+matrix MatWVP; // 世界、观察、投影变换矩阵的乘积
+float4 ViewPos; //视点位置
+float3 LightPos = {-3.0f, 3.0f, -1.0f};   //点光源位置
+float4 Attenuation = {0.5f, 0.1f, 0.0f, 0.0f}; //点光源的衰减系数，分别存储在x,y,z分量里
+
+struct VS_INPUT
+{
+	
+	float4 Pos : POSITION0;
+	float3 Normal : NORMAL;
+};
+
+struct VS_OUTPUT
+{
+	float4 Position : POSITION0;
+	float4 LightDir : TEXCOORD0;  // 光源方向
+	float3 Normal   : TEXCOORD1;
+	float3 HalfVect : TEXCOORD2;
+};
+
+VS_OUTPUT vs_main(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	output.Position = mul(input.Pos, MatWVP);
+	output.Normal = input.Normal;
+ 
+
+	float3 LightDir = LightPos - input.Pos; 	//计算光线入射方向
+	float Dist = length(LightDir);
+	
+	output.LightDir.xyz = LightDir / Dist;  //将光线入射向量存储在VS_OUTPUT的LightDir的成员的前三个分量中//而用w分量存储距离衰减系数DistAtten
+	
+	output.LightDir.w = (1.0f / (Attenuation.x + Attenuation.y * Dist + Attenuation.z * Dist * Dist));
+ 
+	float3 EyeDir = normalize(ViewPos - input.Pos); //计算向量LightDir和EyeDir的角平分线
+	output.HalfVect = normalize(EyeDir + LightDir); // 
+ 
+	return output;
+}
+
+
